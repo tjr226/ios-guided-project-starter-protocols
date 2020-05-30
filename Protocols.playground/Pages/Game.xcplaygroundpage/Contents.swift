@@ -82,13 +82,13 @@ class KnockOut: DiceGame {
                 let diceRollSum = dice.roll() + dice.roll()
                 
                 delegate?.game(self, didStartNewTurnWithDiceRoll: diceRollSum)
-                
+//                print(player.score)
                 // check knockout number
                 if diceRollSum == player.knockoutNumber {
                     print("Player \(player.id) is knocked out by rolling \(player.knockoutNumber), their score was \(player.score)")
                     // if it's knockout, goodbye
                     player.knockedOut = true
-                    
+                } else {
                     let activePlayers = players.filter( {$0.knockedOut == false})
                     // game ends if all players knocked out
                     if activePlayers.count == 0 {
@@ -96,18 +96,21 @@ class KnockOut: DiceGame {
                         print("All players have been knocked out.")
                     } else {
                         // if not, add score to running tally
-                        print(player.score, diceRollSum)
                         player.score += diceRollSum
-                        print("second score", player.score)
                         // game ends when a player reaches 100
                         if player.score >= 100 {
                             reachedGameEnd = true
                             print("Player \(player.id) has won with a final score of \(player.score).")
+                            print("Remaining players: ", players.filter({$0.knockedOut == false}).count)
+                            break
                         }
                     }
-                    
                 }
+                
+            
             }
+            
+//              print("Remaining players: ", players.filter({$0.knockedOut == false}).count)
         }
         
         delegate?.gameDidEnd(self)
@@ -130,7 +133,7 @@ class DiceGameTracker: DiceGameDelegate {
     
     func game(_ game: DiceGame, didStartNewTurnWithDiceRoll diceRoll: Int) {
         numberOfTurns += 1
-        print("Rolled a \(diceRoll)")
+//        print("Rolled a \(diceRoll)")
     }
     
     func gameDidEnd(_ game: DiceGame) {
